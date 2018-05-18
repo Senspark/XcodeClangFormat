@@ -127,10 +127,13 @@ performCommandWithInvocation:(XCSourceEditorCommandInvocation*)invocation
                        }]);
         } else {
             // parse style
-            llvm::StringRef configString(
-                reinterpret_cast<const char*>([config bytes]), [config length]);
-            auto error =
-                clang::format::parseConfiguration(configString, &format);
+            // Ensure null terminated
+            NSString* configString =
+                [[NSString alloc] initWithData:config
+                                      encoding:NSUTF8StringEncoding];
+            llvm::StringRef text([configString UTF8String],
+                                 [configString length]);
+            auto error = clang::format::parseConfiguration(text, &format);
             if (error) {
                 completionHandler([NSError
                     errorWithDomain:errorDomain
@@ -163,8 +166,9 @@ performCommandWithInvocation:(XCSourceEditorCommandInvocation*)invocation
 
     NSData* buffer = [[[invocation buffer] completeBuffer]
         dataUsingEncoding:NSUTF8StringEncoding];
-    llvm::StringRef code(reinterpret_cast<const char*>([buffer bytes]),
-                         [buffer length]);
+    NSString* bufferString =
+        [[NSString alloc] initWithData:buffer encoding:NSUTF8StringEncoding];
+    llvm::StringRef code([bufferString UTF8String], [bufferString length]);
 
     std::vector<std::size_t> offsets;
     updateOffsets(offsets, [[invocation buffer] lines]);
