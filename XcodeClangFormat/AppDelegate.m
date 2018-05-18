@@ -2,57 +2,59 @@
 
 @interface AppDelegate ()
 
-@property(weak) IBOutlet NSWindow* window;
-@property(weak) IBOutlet NSButton* llvmStyle;
-@property(weak) IBOutlet NSButton* googleStyle;
-@property(weak) IBOutlet NSButton* chromiumStyle;
-@property(weak) IBOutlet NSButton* mozillaStyle;
-@property(weak) IBOutlet NSButton* webkitStyle;
-@property(weak) IBOutlet NSButton* customStyle;
-@property(weak) IBOutlet NSPathControl* primaryPathControl;
-@property(weak) IBOutlet NSPathControl* secondaryPathControl;
+@property (weak) IBOutlet NSWindow* window;
+@property (weak) IBOutlet NSButton* llvmStyle;
+@property (weak) IBOutlet NSButton* googleStyle;
+@property (weak) IBOutlet NSButton* chromiumStyle;
+@property (weak) IBOutlet NSButton* mozillaStyle;
+@property (weak) IBOutlet NSButton* webkitStyle;
+@property (weak) IBOutlet NSButton* customStyle;
+@property (weak) IBOutlet NSPathControl* primaryPathControl;
+@property (weak) IBOutlet NSPathControl* secondaryPathControl;
 @end
 
 @implementation AppDelegate
 
-NSUserDefaults* defaults = nil;
+static NSUserDefaults* defaults = nil;
 
 - (void)applicationWillFinishLaunching:(NSNotification*)notification {
     defaults = [[NSUserDefaults alloc] initWithSuiteName:@"XcodeClangFormat"];
 
     NSString* style = [defaults stringForKey:@"style"];
-    if (!style) {
+    if (style == nil) {
         style = @"llvm";
     }
 
     if ([style isEqualToString:@"custom"]) {
-        self.customStyle.state = NSOnState;
+        [[self customStyle] setState:NSOnState];
     } else if ([style isEqualToString:@"google"]) {
-        self.googleStyle.state = NSOnState;
+        [[self googleStyle] setState:NSOnState];
     } else if ([style isEqualToString:@"chromium"]) {
-        self.chromiumStyle.state = NSOnState;
+        [[self chromiumStyle] setState:NSOnState];
     } else if ([style isEqualToString:@"mozilla"]) {
-        self.mozillaStyle.state = NSOnState;
+        [[self mozillaStyle] setState:NSOnState];
     } else if ([style isEqualToString:@"webkit"]) {
-        self.webkitStyle.state = NSOnState;
+        [[self webkitStyle] setState:NSOnState];
     } else {
-        self.llvmStyle.state = NSOnState;
+        [[self llvmStyle] setState:NSOnState];
     }
 
     NSData* bookmark = [defaults dataForKey:@"file"];
-    if (bookmark) {
+    if (bookmark != nil) {
         NSError* error = nil;
         BOOL stale = NO;
-        NSURL* url = [NSURL URLByResolvingBookmarkData:bookmark
-                                               options:NSURLBookmarkResolutionWithSecurityScope |
-                                                       NSURLBookmarkResolutionWithoutUI
-                                         relativeToURL:nil
-                                   bookmarkDataIsStale:&stale
-                                                 error:&error];
+        NSURL* url = [NSURL
+            URLByResolvingBookmarkData:bookmark
+                               options:
+                                   NSURLBookmarkResolutionWithSecurityScope |
+                                   NSURLBookmarkResolutionWithoutUI
+                         relativeToURL:nil
+                   bookmarkDataIsStale:&stale
+                                 error:&error];
 
-        if (url) {
-            // Regenerate the bookmark, so that the extension can read a valid bookmark after a
-            // system restart.
+        if (url != nil) {
+            // Regenerate the bookmark, so that the extension can read a valid
+            // bookmark after a system restart.
             [url startAccessingSecurityScopedResource];
             NSData* regularBookmark = [url bookmarkDataWithOptions:0
                                     includingResourceValuesForKeys:nil
@@ -61,8 +63,8 @@ NSUserDefaults* defaults = nil;
             [url stopAccessingSecurityScopedResource];
             [defaults setObject:regularBookmark forKey:@"regularBookmark"];
 
-            self.primaryPathControl.URL = url;
-            self.secondaryPathControl.URL = url;
+            [[self primaryPathControl] setURL:url];
+            [[self secondaryPathControl] setURL:url];
         } else {
             // Remove the bookmark value from the storage
             [defaults setNilValueForKey:@"regularBookmark"];
@@ -72,21 +74,22 @@ NSUserDefaults* defaults = nil;
 }
 
 - (BOOL)application:(NSApplication*)application openFile:(NSString*)filename {
-    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@", filename]];
+    NSURL* url = [NSURL
+        URLWithString:[NSString stringWithFormat:@"file://%@", filename]];
     return [self selectURL:url];
 }
 
 - (IBAction)chooseStyle:(id)sender {
     NSString* style = nil;
-    if (sender == self.customStyle) {
+    if (sender == [self customStyle]) {
         style = @"custom";
-    } else if (sender == self.googleStyle) {
+    } else if (sender == [self googleStyle]) {
         style = @"google";
-    } else if (sender == self.chromiumStyle) {
+    } else if (sender == [self chromiumStyle]) {
         style = @"chromium";
-    } else if (sender == self.mozillaStyle) {
+    } else if (sender == [self mozillaStyle]) {
         style = @"mozilla";
-    } else if (sender == self.webkitStyle) {
+    } else if (sender == [self webkitStyle]) {
         style = @"webkit";
     } else {
         style = @"llvm";
@@ -96,18 +99,21 @@ NSUserDefaults* defaults = nil;
     [defaults synchronize];
 }
 
-- (void)pathControl:(NSPathControl*)pathControl willDisplayOpenPanel:(NSOpenPanel*)openPanel {
-    openPanel.title = @"Choose custom .clang-format file";
-    openPanel.canChooseFiles = YES;
-    openPanel.canChooseDirectories = YES;
-    openPanel.showsHiddenFiles = YES;
-    openPanel.treatsFilePackagesAsDirectories = YES;
-    openPanel.allowsMultipleSelection = NO;
+- (void)pathControl:(NSPathControl*)pathControl
+    willDisplayOpenPanel:(NSOpenPanel*)openPanel {
+    [openPanel setTitle:@"Choose custom .clang-format file"];
+    [openPanel setCanChooseFiles:YES];
+    [openPanel setCanChooseDirectories:YES];
+    [openPanel setShowsHiddenFiles:YES];
+    [openPanel setTreatsFilePackagesAsDirectories:YES];
+    [openPanel setAllowsMultipleSelection:NO];
 }
 
 - (NSURL*)findClangFormatFileFromURL:(NSURL*)url {
     NSNumber* isDirectory;
-    BOOL success = [url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
+    BOOL success = [url getResourceValue:&isDirectory
+                                  forKey:NSURLIsDirectoryKey
+                                   error:nil];
     if (success && [isDirectory boolValue]) {
         return [url URLByAppendingPathComponent:@".clang-format"];
     } else {
@@ -118,16 +124,19 @@ NSUserDefaults* defaults = nil;
 - (NSData*)tryCreateBookmarkFromURL:(NSURL*)url {
     // Create a bookmark and store into defaults.
     NSError* error = nil;
-    return [url bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope |
-                                        NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess
+    return [url bookmarkDataWithOptions:
+                    NSURLBookmarkCreationWithSecurityScope |
+                    NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess
          includingResourceValuesForKeys:nil
                           relativeToURL:nil
                                   error:&error];
 }
 
-- (NSDragOperation)pathControl:(NSPathControl*)pathControl validateDrop:(id<NSDraggingInfo>)info {
+- (NSDragOperation)pathControl:(NSPathControl*)pathControl
+                  validateDrop:(id<NSDraggingInfo>)info {
     NSPasteboard* pastboard = [info draggingPasteboard];
-    NSURL* url = [self findClangFormatFileFromURL:[NSURL URLFromPasteboard:pastboard]];
+    NSURL* url =
+        [self findClangFormatFileFromURL:[NSURL URLFromPasteboard:pastboard]];
     NSData* bookmark = [self tryCreateBookmarkFromURL:url];
     if (bookmark) {
         return NSDragOperationCopy;
@@ -147,9 +156,9 @@ NSUserDefaults* defaults = nil;
     if (bookmark == nil) {
         return NO;
     } else {
-        self.primaryPathControl.URL = url;
-        self.secondaryPathControl.URL = url;
-        self.customStyle.state = NSOnState;
+        [[self primaryPathControl] setURL:url];
+        [[self secondaryPathControl] setURL:url];
+        [[self customStyle] setState:NSOnState];
 
         [defaults setValue:@"custom" forKey:@"style"];
         [defaults setObject:bookmark forKey:@"file"];
