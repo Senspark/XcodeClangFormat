@@ -16,6 +16,8 @@
 		559B24191D7EBDC400937AB3 /* ClangFormatCommand.mm in Sources */ = {isa = PBXBuildFile; fileRef = 559B24181D7EBDC400937AB3 /* ClangFormatCommand.mm */; };
 		559B241D1D7EBDC400937AB3 /* clang-format.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 559B240F1D7EBDC400937AB3 /* clang-format.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		55BCFFFA1D80170F000EDB05 /* libcurses.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 557D38B71D7F270E00708269 /* libcurses.tbd */; };
+		AD79BDE520AE6F1B00F46C96 /* libLLVMBinaryFormat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD79BDE420AE6F1B00F46C96 /* libLLVMBinaryFormat.a */; };
+		AD79BDE720AE6F5B00F46C96 /* libLLVMDemangle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD79BDE620AE6F5B00F46C96 /* libLLVMDemangle.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +64,8 @@
 		559B241A1D7EBDC400937AB3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		55BCFFF71D801362000EDB05 /* config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = config.xcconfig; sourceTree = "<group>"; };
 		55C8203F1D87F81300006D07 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
+		AD79BDE420AE6F1B00F46C96 /* libLLVMBinaryFormat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMBinaryFormat.a; path = "deps/clang-6.0.0/lib/libLLVMBinaryFormat.a"; sourceTree = "<group>"; };
+		AD79BDE620AE6F5B00F46C96 /* libLLVMDemangle.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMDemangle.a; path = "deps/clang-6.0.0/lib/libLLVMDemangle.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +82,8 @@
 			files = (
 				55BCFFFA1D80170F000EDB05 /* libcurses.tbd in Frameworks */,
 				559B24101D7EBDC400937AB3 /* Cocoa.framework in Frameworks */,
+				AD79BDE520AE6F1B00F46C96 /* libLLVMBinaryFormat.a in Frameworks */,
+				AD79BDE720AE6F5B00F46C96 /* libLLVMDemangle.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,6 +136,8 @@
 		559B23F71D7EBDB700937AB3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AD79BDE620AE6F5B00F46C96 /* libLLVMDemangle.a */,
+				AD79BDE420AE6F1B00F46C96 /* libLLVMBinaryFormat.a */,
 				557D38B71D7F270E00708269 /* libcurses.tbd */,
 				559B23F81D7EBDB700937AB3 /* Cocoa.framework */,
 			);
@@ -347,7 +355,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -388,7 +396,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 			};
@@ -442,7 +450,10 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				INFOPLIST_FILE = "clang-format/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/deps/clang-6.0.0/lib",
+				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(LLVM_CXXFLAGS)",
 					"$(OTHER_CFLAGS)",
@@ -479,7 +490,10 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				INFOPLIST_FILE = "clang-format/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/deps/clang-6.0.0/lib",
+				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(LLVM_CXXFLAGS)",
 					"$(OTHER_CFLAGS)",
