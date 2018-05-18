@@ -111,9 +111,10 @@ performCommandWithInvocation:(XCSourceEditorCommandInvocation*)invocation
         style = @"llvm";
     }
 
-    clang::format::FormatStyle format = clang::format::getLLVMStyle();
-    format.Language = clang::format::FormatStyle::LK_Cpp;
-    clang::format::getPredefinedStyle("LLVM", format.Language, &format);
+    clang::format::FormatStyle formatStyle = clang::format::getLLVMStyle();
+    formatStyle.Language = clang::format::FormatStyle::LK_Cpp;
+    clang::format::getPredefinedStyle("LLVM", formatStyle.Language,
+                                      &formatStyle);
     if ([style isEqualToString:@"custom"]) {
         NSData* config = [self getCustomStyle];
         if (config == nil) {
@@ -133,7 +134,7 @@ performCommandWithInvocation:(XCSourceEditorCommandInvocation*)invocation
                                       encoding:NSUTF8StringEncoding];
             llvm::StringRef text([configString UTF8String],
                                  [configString length]);
-            auto error = clang::format::parseConfiguration(text, &format);
+            auto error = clang::format::parseConfiguration(text, &formatStyle);
             if (error) {
                 completionHandler([NSError
                     errorWithDomain:errorDomain
@@ -150,7 +151,7 @@ performCommandWithInvocation:(XCSourceEditorCommandInvocation*)invocation
     } else {
         auto success = clang::format::getPredefinedStyle(
             llvm::StringRef([style cStringUsingEncoding:NSUTF8StringEncoding]),
-            clang::format::FormatStyle::LanguageKind::LK_Cpp, &format);
+            clang::format::FormatStyle::LanguageKind::LK_Cpp, &formatStyle);
         if (!success) {
             completionHandler([NSError
                 errorWithDomain:errorDomain
@@ -174,7 +175,7 @@ performCommandWithInvocation:(XCSourceEditorCommandInvocation*)invocation
     updateOffsets(offsets, [[invocation buffer] lines]);
 
     std::vector<clang::tooling::Range> ranges;
-    for (XCSourceTextRange* range in invocation.buffer.selections) {
+    for (XCSourceTextRange* range in [[invocation buffer] selections]) {
         const std::size_t start =
             offsets[[range start].line] + [range start].column;
         const std::size_t end = offsets[[range end].line] + [range end].column;
@@ -183,9 +184,26 @@ performCommandWithInvocation:(XCSourceEditorCommandInvocation*)invocation
 
     // Calculated replacements and apply them to the input buffer.
     const llvm::StringRef filename("<stdin>");
-    auto replaces = clang::format::reformat(format, code, ranges, filename);
-    auto result = clang::tooling::applyAllReplacements(code, replaces);
 
+    // Similar to ClangFormat.cpp
+    auto replaces =
+        clang::format::sortIncludes(formatStyle, code, ranges, filename);
+    auto changedCode = clang::tooling::applyAllReplacements(code, replaces);
+    if (!changedCode) {
+        completionHandler([NSError
+            errorWithDomain:errorDomain
+                       code:0
+                   userInfo:@{
+                       NSLocalizedDescriptionKey:
+                           @"Failed to sort includes."
+                   }]);
+        return;
+    }
+    ranges = clang::tooling::calculateRangesAfterReplacements(replaces, ranges);
+    auto formatChanges =
+        clang::format::reformat(formatStyle, *changedCode, ranges, filename);
+    replaces = replaces.merge(formatChanges);
+    auto result = clang::tooling::applyAllReplacements(code, replaces);
     if (!result) {
         // We could not apply the calculated replacements.
         completionHandler([NSError
