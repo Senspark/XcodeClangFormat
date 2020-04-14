@@ -4,8 +4,8 @@ set -e
 set -o pipefail
 set -u
 
-LLVM_VERSION=6.0.0
-LLVM_HASH=f4abbb8acfabc6c73254040c54c2660b4da7454915a0553f2fecdacfb6e2fdf3
+LLVM_VERSION=10.0.0
+LLVM_HASH=70a7d5ed3bb16a5b5310ea4bfe95a74894022a43abb96d28ef8e30ab1f41d47a
 LLVM_CONFIG=${LLVM_CONFIG:-llvm-config}
 
 command -v "${LLVM_CONFIG}" >/dev/null 2>&1 || {
@@ -14,11 +14,12 @@ command -v "${LLVM_CONFIG}" >/dev/null 2>&1 || {
         mkdir -p "deps"
         FILE="deps/clang-${LLVM_VERSION}.tar.xz"
         if [ ! -f "${FILE}" ]; then
-            URL="http://llvm.org/releases/${LLVM_VERSION}/clang+llvm-${LLVM_VERSION}-x86_64-apple-darwin.tar.xz"
+            URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/clang+llvm-${LLVM_VERSION}-x86_64-apple-darwin.tar.xz"
             echo "Downloading ${URL}..."
             curl --retry 3 -# -S -L "${URL}" -o "${FILE}.tmp" && mv "${FILE}.tmp" "${FILE}"
         fi
         echo -n "Checking file... "
+        shasum -a 512256 ${FILE}
         echo "${LLVM_HASH}  ${FILE}" | shasum -a 512256 -c
         rm -rf "${PREFIX}"
         mkdir -p "${PREFIX}"

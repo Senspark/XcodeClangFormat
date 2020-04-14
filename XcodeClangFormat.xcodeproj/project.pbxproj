@@ -19,6 +19,9 @@
 		AD79BDE520AE6F1B00F46C96 /* libLLVMBinaryFormat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD79BDE420AE6F1B00F46C96 /* libLLVMBinaryFormat.a */; };
 		AD79BDE720AE6F5B00F46C96 /* libLLVMDemangle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD79BDE620AE6F5B00F46C96 /* libLLVMDemangle.a */; };
 		AD79BDE920AE71D500F46C96 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD79BDE820AE71D500F46C96 /* AppKit.framework */; };
+		ADCEF282244555AF00596D81 /* libclangToolingInclusions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADCEF281244555AF00596D81 /* libclangToolingInclusions.a */; };
+		ADCEF2842445569800596D81 /* libLLVMRemarks.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADCEF2832445569800596D81 /* libLLVMRemarks.a */; };
+		ADCEF286244556A200596D81 /* libLLVMBitstreamReader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADCEF285244556A200596D81 /* libLLVMBitstreamReader.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +71,13 @@
 		AD79BDE420AE6F1B00F46C96 /* libLLVMBinaryFormat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMBinaryFormat.a; path = "deps/clang-6.0.0/lib/libLLVMBinaryFormat.a"; sourceTree = "<group>"; };
 		AD79BDE620AE6F5B00F46C96 /* libLLVMDemangle.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMDemangle.a; path = "deps/clang-6.0.0/lib/libLLVMDemangle.a"; sourceTree = "<group>"; };
 		AD79BDE820AE71D500F46C96 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		ADCEF279244554D000596D81 /* libLLVMObjectYAML.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMObjectYAML.a; path = "deps/clang-10.0.0/lib/libLLVMObjectYAML.a"; sourceTree = "<group>"; };
+		ADCEF27B244554DC00596D81 /* liblldYAML.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblldYAML.a; path = "deps/clang-10.0.0/lib/liblldYAML.a"; sourceTree = "<group>"; };
+		ADCEF27D2445552C00596D81 /* libclangTooling.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclangTooling.a; path = "deps/clang-10.0.0/lib/libclangTooling.a"; sourceTree = "<group>"; };
+		ADCEF27F2445559300596D81 /* libclangToolingCore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclangToolingCore.a; path = "deps/clang-10.0.0/lib/libclangToolingCore.a"; sourceTree = "<group>"; };
+		ADCEF281244555AF00596D81 /* libclangToolingInclusions.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclangToolingInclusions.a; path = "deps/clang-10.0.0/lib/libclangToolingInclusions.a"; sourceTree = "<group>"; };
+		ADCEF2832445569800596D81 /* libLLVMRemarks.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMRemarks.a; path = "deps/clang-10.0.0/lib/libLLVMRemarks.a"; sourceTree = "<group>"; };
+		ADCEF285244556A200596D81 /* libLLVMBitstreamReader.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMBitstreamReader.a; path = "deps/clang-10.0.0/lib/libLLVMBitstreamReader.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,8 +95,11 @@
 			files = (
 				55BCFFFA1D80170F000EDB05 /* libcurses.tbd in Frameworks */,
 				559B24101D7EBDC400937AB3 /* Cocoa.framework in Frameworks */,
+				ADCEF282244555AF00596D81 /* libclangToolingInclusions.a in Frameworks */,
 				AD79BDE520AE6F1B00F46C96 /* libLLVMBinaryFormat.a in Frameworks */,
+				ADCEF286244556A200596D81 /* libLLVMBitstreamReader.a in Frameworks */,
 				AD79BDE720AE6F5B00F46C96 /* libLLVMDemangle.a in Frameworks */,
+				ADCEF2842445569800596D81 /* libLLVMRemarks.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,6 +152,13 @@
 		559B23F71D7EBDB700937AB3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ADCEF285244556A200596D81 /* libLLVMBitstreamReader.a */,
+				ADCEF2832445569800596D81 /* libLLVMRemarks.a */,
+				ADCEF281244555AF00596D81 /* libclangToolingInclusions.a */,
+				ADCEF27F2445559300596D81 /* libclangToolingCore.a */,
+				ADCEF27D2445552C00596D81 /* libclangTooling.a */,
+				ADCEF27B244554DC00596D81 /* liblldYAML.a */,
+				ADCEF279244554D000596D81 /* libLLVMObjectYAML.a */,
 				AD79BDE820AE71D500F46C96 /* AppKit.framework */,
 				AD79BDE620AE6F5B00F46C96 /* libLLVMDemangle.a */,
 				AD79BDE420AE6F1B00F46C96 /* libLLVMBinaryFormat.a */,
@@ -484,10 +504,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				INFOPLIST_FILE = "clang-format/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/deps/clang-6.0.0/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(LLVM_LIBDIR)";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(LLVM_CXXFLAGS)",
 					"$(OTHER_CFLAGS)",
@@ -522,10 +539,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				INFOPLIST_FILE = "clang-format/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/deps/clang-6.0.0/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(LLVM_LIBDIR)";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(LLVM_CXXFLAGS)",
 					"$(OTHER_CFLAGS)",
